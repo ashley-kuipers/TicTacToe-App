@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <string name="enterName">Enter your Name:</string>
+    <string name="enterNameButton">Save</string>
+    <string name="b_finish">Quit</string>
+    <string name="x">X</string>
+    <string name="o">O</string>
+    <string name="space"> </string>
+    <string name="leaderboardTitle">Leaderboard</string>
+
+    <string-array name="homeMenu">
+        <item>Enter Names</item>
+        <item>Play Game</item>
+        <item>Standings</item>
+    </string-array>
+
+    <string-array name="leaderboard_default">
+        <item>Ashley . . . . . . . . . . . 312</item>
+        <item>Tyler . . . . . . . . . . . 128</item>
+        <item>Dad . . . . . . . . . . . 728</item>
+    </string-array>
+</resources>
