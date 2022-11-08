@@ -7,11 +7,17 @@
     <string name="o">O</string>
     <string name="space"> </string>
     <string name="leaderboardTitle">Leaderboard</string>
+    <string name="pickOpponentTitle">Who are you playing against?</string>
 
     <string-array name="homeMenu">
-        <item>Enter Names</item>
+        <item>Enter Name</item>
         <item>Play Game</item>
         <item>Standings</item>
+    </string-array>
+
+    <string-array name="opponentMenu">
+        <item>Computer</item>
+        <item>Another Player</item>
     </string-array>
 
     <string-array name="leaderboard_default">
@@ -19,4 +25,6 @@
         <item>Tyler . . . . . . . . . . . 128</item>
         <item>Dad . . . . . . . . . . . 728</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

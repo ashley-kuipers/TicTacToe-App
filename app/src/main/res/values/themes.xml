@@ -6,8 +6,8 @@
         <item name="colorPrimaryVariant">@color/light</item>
         <item name="colorOnPrimary">@color/darkBlue</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/orange</item>
-        <item name="colorSecondaryVariant">@color/orange</item>
+        <item name="colorSecondary">@color/lighterBlue</item>
+        <item name="colorSecondaryVariant">@color/lighterBlue</item>
         <item name="colorOnSecondary">@color/darkBlue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/darkBlue</item>
@@ -30,26 +30,21 @@
     </style>
 
     <style name="tv_gameBoard" parent="h2">
-        <item name="android:textSize">60sp</item>
+        <item name="android:textSize">56sp</item>
         <item name="android:textColor">@color/light</item>
-        <item name="android:background">@drawable/lighter_background</item>
+        <item name="android:background">@drawable/rounded_corners</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingTop">5dp</item>
     </style>
 
-    <style name="tv_gameBoardDiv" parent="h2">
-        <item name="android:textSize">60sp</item>
-        <item name="android:textColor">@color/orange</item>
-        <item name="android:background">@color/darkBlue</item>
-    </style>
-
-    <style name="lightBlueButton" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/lightBlue</item>
+    <style name="primaryButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/lighterBlue</item>
+        <item name="android:background">@drawable/border</item>
         <item name="android:textColor">@color/light</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingLeft">40dp</item>
-        <item name="android:paddingRight">40dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingRight">32dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:letterSpacing">0.1</item>
         <item name="android:textStyle">bold</item>
@@ -61,5 +56,10 @@
         <item name="android:textColorHint">#B9FFFFFF</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/lighterBlue</item>
+        <item name="android:textColor">@color/light</item>
     </style>
 </resources>

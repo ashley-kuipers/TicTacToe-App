@@ -16,20 +16,20 @@
         android:text="@string/enterName" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/et_playerName"
         style="@style/et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="24dp"
         android:ems="10"
         android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/b_done"
-        style="@style/lightBlueButton"
+        style="@style/primaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enterNameButton" />

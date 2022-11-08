@@ -9,12 +9,15 @@
     tools:context=".PlayGameActivity">
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/t_title"
         style="@style/h1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Tap spot to start" />
+        android:layout_marginBottom="20dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="Tap spot to start"
+        android:textSize="34dp" />
 
     <TableLayout
         android:id="@+id/layout_gameBoard"
@@ -22,13 +25,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp">
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/lighter_background"
+        android:padding="16dp">
 
         <TableRow
             android:id="@+id/row_A"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/lighterBlue"
             android:gravity="center">
 
             <TextView
@@ -36,45 +42,32 @@
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d1"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/a2"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d2"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/a3"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -82,18 +75,12 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/divider1"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/border_bottom"
-            android:minHeight="4dp" />
-
-        <TableRow
             android:id="@+id/row_B"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/lighterBlue"
             android:gravity="center">
 
             <TextView
@@ -101,62 +88,43 @@
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d3"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/b2"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d4"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/b3"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
 
         </TableRow>
 
         <TableRow
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/border_bottom"
-            android:minHeight="4dp" />
-
-        <TableRow
             android:id="@+id/row_C"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/lighterBlue"
             android:gravity="center">
 
             <TextView
@@ -164,45 +132,32 @@
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d5"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/c2"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
-
-            <TextView
-                android:id="@+id/d6"
-                style="@style/tv_gameBoardDiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="|" />
 
             <TextView
                 android:id="@+id/c3"
                 style="@style/tv_gameBoard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="4"
+                android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:text="@string/space" />
         </TableRow>
@@ -211,8 +166,9 @@
 
     <Button
         android:id="@+id/b_quit"
-        style="@style/lightBlueButton"
+        style="@style/primaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/border"
         android:text="@string/b_finish" />
 </LinearLayout>
