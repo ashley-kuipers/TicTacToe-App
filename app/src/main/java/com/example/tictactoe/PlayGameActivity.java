@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,6 +64,8 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 finish();
+                Intent i = new Intent(PlayGameActivity.this, MainActivity.class);
+                startActivity(i);
             }
         });
 
@@ -115,13 +118,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
 
-        if(checkPlayer1Win()){
-            openDialog(playerName);
-            // add win to the persons name
-        } else if (checkPlayer2Win()){
-            openDialog(secondPlayer);
-            // add win to second player's name
-        }
+
     }
 
     public void openDialog(String winner){
@@ -139,24 +136,37 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             currentGameTVs[row][column].setText(R.string.x);
             currentGame[row][column] = 'X';
 
+            if(checkPlayer1Win()){
+                openDialog(playerName);
+                // add win to the persons name
+            }
+
             // if playing against the computer, get the computers move
             if(secondPlayer.equals("Computer")){
                 // get computer move and add it to board
                 getCompMove();
                 output = "Tap to play\nyour turn";
+                if(!checkPlayer1Win() && checkPlayer2Win()){
+                    openDialog(secondPlayer);
+                }
+
             } else {
-                output = secondPlayer + "'s turn";
+                output = secondPlayer + "'s\nturn";
             }
 
         } else {
             // else it was second players move so add their turn to the board
             currentGameTVs[row][column].setText(R.string.o);
             currentGame[row][column] = 'O';
-            output = playerName + "'s turn";
+            output = playerName + "'s\nturn";
+            if(checkPlayer2Win()){
+                openDialog(secondPlayer);
+            }
         }
 
         player1Turn = !player1Turn;
         t_title.setText(output);
+
     }
 
     public boolean checkPlayer1Win(){
@@ -238,17 +248,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
-//        a1.setText(String.valueOf(currentGame[0][0]));
-//        a2.setText(String.valueOf(currentGame[0][1]));
-//        a3.setText(String.valueOf(currentGame[0][2]));
-//        b1.setText(String.valueOf(currentGame[1][0]));
-//        b2.setText(String.valueOf(currentGame[1][1]));
-//        b3.setText(String.valueOf(currentGame[1][2]));
-//        c1.setText(String.valueOf(currentGame[2][0]));
-//        c2.setText(String.valueOf(currentGame[2][1]));
-//        c3.setText(String.valueOf(currentGame[2][2]));
-
-        String output = "Player " + playerName + "'s\nstarts";
+        String output = playerName + "\nstarts";
         t_title.setText(output);
     }
 

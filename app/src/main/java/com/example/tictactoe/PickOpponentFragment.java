@@ -68,7 +68,8 @@ public class PickOpponentFragment extends Fragment {
                         saveData(); // TODO: actually make it open up a fragment that gets second player name
 
                         // open game activity
-                        Intent i = new Intent(getActivity(), PlayGameActivity.class);
+                        Intent i = new Intent(getActivity(), EnterNamesActivity.class);
+                        i.putExtra("playerChoosing", "Player 2");
                         startActivity(i);
                         break;
 
@@ -91,7 +92,9 @@ public class PickOpponentFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // save values to sharedPreferences
-        editor.putString("secondPlayer", player); // TODO: CHANGE VAR HERE
+        if(player.equals("Computer")){
+            editor.putString("secondPlayer", "Computer");
+        }
 
         // commit sharedPreferences
         editor.apply();

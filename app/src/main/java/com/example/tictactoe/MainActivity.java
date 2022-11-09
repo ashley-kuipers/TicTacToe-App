@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         // launch enter name
                         Intent in = new Intent(MainActivity.this, EnterNamesActivity.class);
+                        in.putExtra("playerChoosing", "Player 1");
                         startActivity(in);
                         break;
 

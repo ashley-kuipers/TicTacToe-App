@@ -8,6 +8,7 @@
     <string name="space"> </string>
     <string name="leaderboardTitle">Leaderboard</string>
     <string name="pickOpponentTitle">Who are you playing against?</string>
+    <string name="enterNameTitle2">Enter Player 2\'s Name</string>
 
     <string-array name="homeMenu">
         <item>Enter Name</item>

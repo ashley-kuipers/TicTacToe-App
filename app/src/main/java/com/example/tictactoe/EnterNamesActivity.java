@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.Objects;
 public class EnterNamesActivity extends AppCompatActivity {
     Button b_done;
     EditText et_playerName;
+    String playerChoosing;
+    TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +31,43 @@ public class EnterNamesActivity extends AppCompatActivity {
 
         b_done = findViewById(R.id.b_done);
         et_playerName = findViewById(R.id.et_playerName);
+        title = findViewById(R.id.t_enterNames);
+
+        Bundle bundle = getIntent().getExtras();
+        playerChoosing = bundle.getString("playerChoosing");
+
+        if (!playerChoosing.equals("Player 1")){
+            title.setText(R.string.enterNameTitle2);
+        }
 
         b_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveData();
                 finish();
+                if(playerChoosing.equals("Player 2")){
+                    // open game activity
+                    Intent intent = new Intent(EnterNamesActivity.this, PlayGameActivity.class);
+                    startActivity(intent);
+                }
             }
         });
+    }
+
+    // Save current Data when app is closed
+    public void saveData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // save values to sharedPreferences
+        if(playerChoosing.equals("Player 1")){
+            editor.putString("currentPlayerName", et_playerName.getText().toString());
+        } else if (playerChoosing.equals("Player 2")){
+            editor.putString("secondPlayer", et_playerName.getText().toString());
+        }
+
+        // commit sharedPreferences
+        editor.apply();
     }
 
     // when you turn the phone, this function is called to save any data you wish to save
@@ -51,21 +83,7 @@ public class EnterNamesActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         // get values from saved state
         et_playerName.setText(savedInstanceState.getString("currentText"));
-
         super.onRestoreInstanceState(savedInstanceState);
-    }
-
-
-    // Save current Data when app is closed
-    public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        // save values to sharedPreferences
-        editor.putString("currentPlayerName", et_playerName.getText().toString());
-
-        // commit sharedPreferences
-        editor.apply();
     }
 
 }
