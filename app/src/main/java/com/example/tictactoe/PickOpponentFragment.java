@@ -24,6 +24,7 @@ import java.util.Objects;
 public class PickOpponentFragment extends Fragment {
     ListView listview;
     String[] opponentMenu;
+    String player;
 
     public PickOpponentFragment() {
         // Required empty public constructor
@@ -53,7 +54,8 @@ public class PickOpponentFragment extends Fragment {
                 switch (position){
                     case 0:
                         // Computer
-                        saveData("Computer");
+                        player = "Computer";
+                        saveData();
 
                         // open game activity
                         Intent intent = new Intent(getActivity(), PlayGameActivity.class);
@@ -62,6 +64,12 @@ public class PickOpponentFragment extends Fragment {
 
                     case 1:
                         // Another Player
+                        player = "Player 2";
+                        saveData(); // TODO: actually make it open up a fragment that gets second player name
+
+                        // open game activity
+                        Intent i = new Intent(getActivity(), PlayGameActivity.class);
+                        startActivity(i);
                         break;
 
                     default:
@@ -78,12 +86,12 @@ public class PickOpponentFragment extends Fragment {
     }
 
     // Save current Data when app is closed
-    public void saveData(String player){
+    public void saveData(){
         SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // save values to sharedPreferences
-        editor.putString("secondPlayer", "Computer"); // TODO: CHANGE VAR HERE
+        editor.putString("secondPlayer", player); // TODO: CHANGE VAR HERE
 
         // commit sharedPreferences
         editor.apply();

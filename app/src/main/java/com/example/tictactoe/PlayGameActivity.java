@@ -12,16 +12,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class PlayGameActivity extends AppCompatActivity implements View.OnClickListener {
     Button b_quit;
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3, t_title;
-    char va1 = ' ', va2 = ' ', va3 = ' ', vb1 = ' ', vb2 = ' ', vb3 = ' ', vc1 = ' ', vc2 = ' ', vc3 = ' ';
+    char[][] currentGame;
+    TextView[][] currentGameTVs;
+
     String playerName, secondPlayer;
-    boolean turn = true;
+    boolean player1Turn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,45 +66,48 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+        currentGame = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+        currentGameTVs = new TextView[][]{{a1, a2, a3}, {b1, b2, b3}, {c1, c2, c3}};
+
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.a1:
-                va1 = addTurn(a1);
+                addTurn(0, 0);
                 break;
 
             case R.id.a2:
-                va2 = addTurn(a2);
+                addTurn(0, 1);
                 break;
 
             case R.id.a3:
-                va3 = addTurn(a3);
+                addTurn(0, 2);
                 break;
 
             case R.id.b1:
-                vb1 = addTurn(b1);
+                addTurn(1, 0);
                 break;
 
             case R.id.b2:
-                vb2 = addTurn(b2);
+                addTurn(1, 1);
                 break;
 
             case R.id.b3:
-                vb3 = addTurn(b3);
+                addTurn(1, 2);
                 break;
 
             case R.id.c1:
-                vc1 = addTurn(c1);
+                addTurn(2, 0);
                 break;
 
             case R.id.c2:
-                vc2 = addTurn(c2);
+                addTurn(2, 1);
                 break;
 
             case R.id.c3:
-                vc3 = addTurn(c3);
+                addTurn(2, 2);
                 break;
 
             default:
@@ -112,33 +116,33 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if(checkPlayer1Win()){
-            openDialog('X');
+            openDialog(playerName);
+            // add win to the persons name
         } else if (checkPlayer2Win()){
-            openDialog('O');
+            openDialog(secondPlayer);
+            // add win to second player's name
         }
     }
 
-    public void openDialog(char winner){
+    public void openDialog(String winner){
         WinnerDialog wd = new WinnerDialog(winner);
         wd.show(getSupportFragmentManager(), "winner");
     }
 
-    public char addTurn(TextView t){
+    public void addTurn(int row, int column){
         // add turn to board
-        char turnPlayed;
         String output;
 
         // if player X's turn, add turn to board
-        if(turn){
+        if(player1Turn || secondPlayer.equals("Computer")){
             // add player X's turn to board
-            t.setText(R.string.x);
-            turnPlayed = 'X';
+            currentGameTVs[row][column].setText(R.string.x);
+            currentGame[row][column] = 'X';
 
             // if playing against the computer, get the computers move
             if(secondPlayer.equals("Computer")){
                 // get computer move and add it to board
                 getCompMove();
-
                 output = "Tap to play\nyour turn";
             } else {
                 output = secondPlayer + "'s turn";
@@ -146,28 +150,31 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
 
         } else {
             // else it was second players move so add their turn to the board
-            t.setText(R.string.o);
-            turnPlayed = 'O';
-
+            currentGameTVs[row][column].setText(R.string.o);
+            currentGame[row][column] = 'O';
             output = playerName + "'s turn";
-            turn = !turn;
         }
 
+        player1Turn = !player1Turn;
         t_title.setText(output);
-        return turnPlayed;
     }
 
     public boolean checkPlayer1Win(){
         boolean userWon = false;
 
         // check horizontal wins
-        if ((va1 == va2 && va2 == va3 && va1 == 'X') || (vb1 == vb2 && vb2 == vb3 && vb1 == 'X') || (vc1 == vc2 && vc2 == vc3 && vc1 == 'X')){
+        if ((currentGame[0][0] == currentGame[0][1] && currentGame[0][1] == currentGame[0][2] && currentGame[0][2] == 'X') ||
+                (currentGame[1][0] == currentGame[1][1] && currentGame[1][1] == currentGame[1][2] && currentGame[1][2] == 'X') ||
+                (currentGame[2][0] == currentGame[2][1] && currentGame[2][1] == currentGame[2][2] && currentGame[2][2] == 'X')){
             userWon = true;
         // check for vertical wins
-        } else if ((va1 == vb1 && vb1 == vc1 && va1 == 'X') || (va2 == vb2 && vb2 == vc2 && va2 == 'X') || (va3 == vb3 && vb3 == vc3 && va3 == 'X')){
+        } else if ((currentGame[0][0] == currentGame[1][0] && currentGame[1][0] == currentGame[2][0] && currentGame[2][0] == 'X') ||
+                (currentGame[0][1] == currentGame[1][1] && currentGame[1][1] == currentGame[2][1] && currentGame[2][1] == 'X') ||
+                (currentGame[0][2] == currentGame[1][2] && currentGame[1][2] == currentGame[2][2] && currentGame[2][2] == 'X')){
             userWon = true;
         // check for diagonal wins
-        } else if ((va1 == vb2 && vb2 == vc3 && va1 == 'X') || (va3 == vb2 && vb2 == vc1 && va3 == 'X')){
+        } else if ((currentGame[0][0] == currentGame[1][1] && currentGame[1][1] == currentGame[2][2] && currentGame[2][2] == 'X') ||
+                (currentGame[0][2] == currentGame[1][1] && currentGame[1][1] == currentGame[2][0] && currentGame[2][0] == 'X')){
             userWon = true;
         }
 
@@ -178,13 +185,18 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         boolean userWon = false;
 
         // check horizontal wins
-        if ((va1 == va2 && va2 == va3 && va1 == 'O') || (vb1 == vb2 && vb2 == vb3 && vb1 == 'O') || (vc1 == vc2 && vc2 == vc3 && vc1 == 'O')){
+        if ((currentGame[0][0] == currentGame[0][1] && currentGame[0][1] == currentGame[0][2] && currentGame[0][2] == 'O') ||
+                (currentGame[1][0] == currentGame[1][1] && currentGame[1][1] == currentGame[1][2] && currentGame[1][2] == 'O') ||
+                (currentGame[2][0] == currentGame[2][1] && currentGame[2][1] == currentGame[2][2] && currentGame[2][2] == 'O')){
             userWon = true;
             // check for vertical wins
-        } else if ((va1 == vb1 && vb1 == vc1 && va1 == 'O') || (va2 == vb2 && vb2 == vc2 && va2 == 'O') || (va3 == vb3 && vb3 == vc3 && va3 == 'O')){
+        } else if ((currentGame[0][0] == currentGame[1][0] && currentGame[1][0] == currentGame[2][0] && currentGame[2][0] == 'O') ||
+                (currentGame[0][1] == currentGame[1][1] && currentGame[1][1] == currentGame[2][1] && currentGame[2][1] == 'O') ||
+                (currentGame[0][2] == currentGame[1][2] && currentGame[1][2] == currentGame[2][2] && currentGame[2][2] == 'O')){
             userWon = true;
             // check for diagonal wins
-        } else if ((va1 == vb2 && vb2 == vc3 && va1 == 'O') || (va3 == vb2 && vb2 == vc1 && va3 == 'O')){
+        } else if ((currentGame[0][0] == currentGame[1][1] && currentGame[1][1] == currentGame[2][2] && currentGame[2][2] == 'O') ||
+                (currentGame[0][2] == currentGame[1][1] && currentGame[1][1] == currentGame[2][0] && currentGame[2][0] == 'O')){
             userWon = true;
         }
 
@@ -192,34 +204,51 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void getCompMove(){
-        // TODO: start here, figure out how to do random move
-        // get random move
+        // random generator
+        Random rand = new Random();
 
-        // check if that move has been taken already
+        // initial variables
+        boolean valid = false;
+
+        // checks if there are still spaces left for the computer to go, if so, comp randomly picks a move
+        if(numSpacesLeft()>0) {
+            do{
+                // get row, col for comp move
+                int compRow = rand.nextInt(3);
+                int compCol = rand.nextInt(3);
+                Log.d("TAG", compRow + " " + compCol);
+                // check if spot isn't taken
+                if (currentGame[compRow][compCol] != 'X' && currentGame[compRow][compCol] != 'O') {
+                    currentGame[compRow][compCol] = 'O';
+                    currentGameTVs[compRow][compCol].setText("O");
+                    valid = true;
+                }
+
+            } while (!valid); // continue loop until valid move is selected
+        }
     }
 
     public void resetBoard(){
-        va1 = ' ';
-        va2 = ' ';
-        va3 = ' ';
-        vb1 = ' ';
-        vb2 = ' ';
-        vb3 = ' ';
-        vc1 = ' ';
-        vc2 = ' ';
-        vc3 = ' ';
+        currentGame = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
 
-        a1.setText(String.valueOf(va1));
-        a2.setText(String.valueOf(va2));
-        a3.setText(String.valueOf(va3));
-        b1.setText(String.valueOf(vb1));
-        b2.setText(String.valueOf(vb2));
-        b3.setText(String.valueOf(vb3));
-        c1.setText(String.valueOf(vc1));
-        c2.setText(String.valueOf(vc2));
-        c3.setText(String.valueOf(vc3));
+        for (int i = 0 ; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                currentGame[i][j] = ' ';
+                currentGameTVs[i][j].setText(" ");
+            }
+        }
 
-        String output = "Tap a spot\nto start";
+//        a1.setText(String.valueOf(currentGame[0][0]));
+//        a2.setText(String.valueOf(currentGame[0][1]));
+//        a3.setText(String.valueOf(currentGame[0][2]));
+//        b1.setText(String.valueOf(currentGame[1][0]));
+//        b2.setText(String.valueOf(currentGame[1][1]));
+//        b3.setText(String.valueOf(currentGame[1][2]));
+//        c1.setText(String.valueOf(currentGame[2][0]));
+//        c2.setText(String.valueOf(currentGame[2][1]));
+//        c3.setText(String.valueOf(currentGame[2][2]));
+
+        String output = "Player " + playerName + "'s\nstarts";
         t_title.setText(output);
     }
 
@@ -261,9 +290,25 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
         // retrieve variables from file
-        playerName = sh.getString("currentPlayerName", "player");
-        secondPlayer = sh.getString("secondPlayer", "Computer");
+        playerName = sh.getString("currentPlayerName", "Player 1");
+        secondPlayer = sh.getString("secondPlayer", "Player 2");
 
+    }
+
+    public int numSpacesLeft(){
+        // initial variables
+        int numSpaces=0;
+
+        // loops through the 2D array and checks how many contain spaces
+        for (int i = 0 ; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (currentGame[i][j] == ' ') {
+                    numSpaces++;
+                }
+            }
+        }
+
+        return numSpaces;
     }
 
     private class GameAlgorithm extends AsyncTask<Void, Void, Void>{
