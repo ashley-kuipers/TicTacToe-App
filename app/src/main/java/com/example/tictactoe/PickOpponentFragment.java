@@ -18,8 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.Objects;
-
 
 public class PickOpponentFragment extends Fragment {
     ListView listview;
@@ -33,6 +31,8 @@ public class PickOpponentFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // resources can only be accessed from onCreate
         Resources res = getResources();
         opponentMenu = res.getStringArray(R.array.opponentMenu);
     }
@@ -47,13 +47,14 @@ public class PickOpponentFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.custom_listview, android.R.id.text1, opponentMenu);
         listview.setAdapter(adapter);
 
+        // add on click listener to the listview
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 Log.d("TAG", "clicked " + position);
                 switch (position){
                     case 0:
-                        // Computer
+                        // Computer is chosen as player 2
                         player = "Computer";
                         saveData();
 
@@ -63,11 +64,10 @@ public class PickOpponentFragment extends Fragment {
                         break;
 
                     case 1:
-                        // Another Player
+                        // Another Player is chosen as Player 2
                         player = "Player 2";
-                        saveData(); // TODO: actually make it open up a fragment that gets second player name
 
-                        // open game activity
+                        // open choose name activity so Player 2's name can be entered
                         Intent i = new Intent(getActivity(), EnterNamesActivity.class);
                         i.putExtra("playerChoosing", "Player 2");
                         startActivity(i);
@@ -86,14 +86,20 @@ public class PickOpponentFragment extends Fragment {
         return view;
     }
 
-    // Save current Data when app is closed
+    // Save data to shared preferences (only called if computer is chosen as second player)
     public void saveData(){
-        SharedPreferences sharedPreferences = this.requireActivity().getSharedPreferences("prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sp = this.requireActivity().getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
 
-        // save values to sharedPreferences
         if(player.equals("Computer")){
+            // enter that second player was chosen to be computer
             editor.putString("secondPlayer", "Computer");
+
+            // double check win log value for computer
+            int compWins = sp.getInt("computer", 900000000);
+            if(compWins == 900000000){
+                editor.putInt("computer", 0);
+            }
         }
 
         // commit sharedPreferences

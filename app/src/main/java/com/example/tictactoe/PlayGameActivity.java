@@ -21,9 +21,9 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3, t_title;
     char[][] currentGame;
     TextView[][] currentGameTVs;
-
+    int p1Wins, p2Wins, compWins;
+    boolean gameWon = false, player1Turn = true;
     String playerName, secondPlayer;
-    boolean player1Turn = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +32,16 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         // hide default action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
 
+        // get data from shared preferences
         getData();
 
+        // initial variables
         b_quit = findViewById(R.id.b_quit);
         t_title = findViewById(R.id.t_title);
-
         String output = "Welcome " + playerName + ",\ntap a spot to start";
         t_title.setText(output);
 
+        // bind all TextViews to variables
         a1 = findViewById(R.id.a1);
         a2 = findViewById(R.id.a2);
         a3 = findViewById(R.id.a3);
@@ -50,6 +52,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         c2 = findViewById(R.id.c2);
         c3 = findViewById(R.id.c3);
 
+        // add on click listener to every TextView
         a1.setOnClickListener(this);
         a2.setOnClickListener(this);
         a3.setOnClickListener(this);
@@ -60,6 +63,13 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         c2.setOnClickListener(this);
         c3.setOnClickListener(this);
 
+        // create game board
+        currentGame = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+
+        // create analogous game board of TextViews
+        currentGameTVs = new TextView[][]{{a1, a2, a3}, {b1, b2, b3}, {c1, c2, c3}};
+
+        // Adds function to the quit button (quits game and opens main activity)
         b_quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,11 +79,9 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        currentGame = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
-        currentGameTVs = new TextView[][]{{a1, a2, a3}, {b1, b2, b3}, {c1, c2, c3}};
-
     }
 
+    // deals with the click listener for each game board text view
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -118,57 +126,70 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
 
-
     }
 
-    public void openDialog(String winner){
-        WinnerDialog wd = new WinnerDialog(winner);
-        wd.show(getSupportFragmentManager(), "winner");
-    }
-
+    // Adds a corresponding move to the board
     public void addTurn(int row, int column){
-        // add turn to board
         String output;
 
-        // if player X's turn, add turn to board
+        // if player X's turn (or playing against the computer), add a move
         if(player1Turn || secondPlayer.equals("Computer")){
             // add player X's turn to board
             currentGameTVs[row][column].setText(R.string.x);
             currentGame[row][column] = 'X';
 
+            // check win conditions
             if(checkPlayer1Win()){
                 openDialog(playerName);
                 // add win to the persons name
+                p1Wins++;
+                saveData();
             }
 
-            // if playing against the computer, get the computers move
-            if(secondPlayer.equals("Computer")){
+            // if playing against the computer (and user hasn't won already), get the computers move
+            if(secondPlayer.equals("Computer") && !checkPlayer1Win()){
                 // get computer move and add it to board
                 getCompMove();
                 output = "Tap to play\nyour turn";
+
+                // check if the computer won (and prevent computer AND player from winning at the same time)
                 if(!checkPlayer1Win() && checkPlayer2Win()){
                     openDialog(secondPlayer);
+                    compWins++;
+                    saveData();
                 }
 
+            // else switch to player 2's turn
             } else {
                 output = secondPlayer + "'s\nturn";
             }
 
+        // else get second player's move
         } else {
-            // else it was second players move so add their turn to the board
+            // Add second player's move to board
             currentGameTVs[row][column].setText(R.string.o);
             currentGame[row][column] = 'O';
             output = playerName + "'s\nturn";
+            // check if player 2 wins
             if(checkPlayer2Win()){
                 openDialog(secondPlayer);
+                p2Wins++;
+                saveData();
             }
         }
 
-        player1Turn = !player1Turn;
+        // if the game hasn't been won, switch the turns
+        if(!gameWon){
+            player1Turn = !player1Turn;
+        } else {
+            gameWon = false;
+        }
+
         t_title.setText(output);
 
     }
 
+    // Check if player X has a win
     public boolean checkPlayer1Win(){
         boolean userWon = false;
 
@@ -191,6 +212,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         return userWon;
     }
 
+    // check if Player O has a win
     public boolean checkPlayer2Win(){
         boolean userWon = false;
 
@@ -213,6 +235,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         return userWon;
     }
 
+    // gets the computers random move
     public void getCompMove(){
         // random generator
         Random rand = new Random();
@@ -238,9 +261,9 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    // resets the game board
     public void resetBoard(){
-        currentGame = new char[][]{{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
-
+        // turns each TextView and array value back to empty space
         for (int i = 0 ; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 currentGame[i][j] = ' ';
@@ -248,8 +271,33 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
+        // Lets users know that it's player 1's turn again
         String output = playerName + "\nstarts";
         t_title.setText(output);
+    }
+
+    // checks the number of empty spaces on the board
+    public int numSpacesLeft(){
+        // initial variables
+        int numSpaces=0;
+
+        // loops through the 2D array and checks how many contain spaces
+        for (int i = 0 ; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (currentGame[i][j] == ' ') {
+                    numSpaces++;
+                }
+            }
+        }
+
+        return numSpaces;
+    }
+
+    // opens an alert dialog when someone wins
+    public void openDialog(String winner){
+        WinnerDialog wd = new WinnerDialog(winner);
+        wd.show(getSupportFragmentManager(), "winner");
+        gameWon = true;
     }
 
     // when you turn the phone, this function is called to save any data you wish to save
@@ -284,31 +332,28 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    // Retrieve shared preferences file
+    // Retrieve data from shared preferences file
     public void getData(){
-        // get values from shared preferences
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
-
-        // retrieve variables from file
         playerName = sh.getString("currentPlayerName", "Player 1");
         secondPlayer = sh.getString("secondPlayer", "Player 2");
+        p1Wins = sh.getInt(playerName.toLowerCase(), 0);
+        p2Wins = sh.getInt(secondPlayer.toLowerCase(), 0);
+        compWins = sh.getInt("computer", 0);
 
     }
 
-    public int numSpacesLeft(){
-        // initial variables
-        int numSpaces=0;
+    // Save data to shared preferences
+    public void saveData(){
+        SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
 
-        // loops through the 2D array and checks how many contain spaces
-        for (int i = 0 ; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (currentGame[i][j] == ' ') {
-                    numSpaces++;
-                }
-            }
-        }
+        // saves each players wins to shared preferences
+        editor.putInt(playerName.toLowerCase(), p1Wins);
+        editor.putInt(secondPlayer.toLowerCase(), p2Wins);
+        editor.putInt("computer", compWins);
 
-        return numSpaces;
+        editor.apply();
     }
 
     private class GameAlgorithm extends AsyncTask<Void, Void, Void>{

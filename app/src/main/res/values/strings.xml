@@ -9,6 +9,7 @@
     <string name="leaderboardTitle">Leaderboard</string>
     <string name="pickOpponentTitle">Who are you playing against?</string>
     <string name="enterNameTitle2">Enter Player 2\'s Name</string>
+    <string name="enterNameSubTitle">* Name is used for leaderboard\n(not case sensitive)</string>
 
     <string-array name="homeMenu">
         <item>Enter Name</item>
@@ -21,11 +22,4 @@
         <item>Another Player</item>
     </string-array>
 
-    <string-array name="leaderboard_default">
-        <item>Ashley . . . . . . . . . . . 312</item>
-        <item>Tyler . . . . . . . . . . . 128</item>
-        <item>Dad . . . . . . . . . . . 728</item>
-    </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
