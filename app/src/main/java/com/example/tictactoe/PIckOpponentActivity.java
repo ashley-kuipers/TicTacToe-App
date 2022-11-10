@@ -1,50 +1,38 @@
 package com.example.tictactoe;
 
-import static android.content.Context.MODE_PRIVATE;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Objects;
 
-public class PickOpponentFragment extends Fragment {
+public class PIckOpponentActivity extends AppCompatActivity {
     ListView listview;
     String[] opponentMenu;
     String player;
 
-    public PickOpponentFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pick_opponent);
+        // hide default action bar
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         // resources can only be accessed from onCreate
         Resources res = getResources();
         opponentMenu = res.getStringArray(R.array.opponentMenu);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pick_opponent, container, false);
 
         // Creating listview adapter (connects the listview to the string array)
-        listview = view.findViewById(R.id.lv_opponent);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), R.layout.custom_listview, android.R.id.text1, opponentMenu);
+        listview = findViewById(R.id.lv_opponent);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, opponentMenu);
         listview.setAdapter(adapter);
 
         // add on click listener to the listview
@@ -59,7 +47,7 @@ public class PickOpponentFragment extends Fragment {
                         saveData();
 
                         // open game activity
-                        Intent intent = new Intent(getActivity(), PlayGameActivity.class);
+                        Intent intent = new Intent(PIckOpponentActivity.this, PlayGameActivity.class);
                         startActivity(intent);
                         break;
 
@@ -68,7 +56,7 @@ public class PickOpponentFragment extends Fragment {
                         player = "Player 2";
 
                         // open choose name activity so Player 2's name can be entered
-                        Intent i = new Intent(getActivity(), EnterNamesActivity.class);
+                        Intent i = new Intent(PIckOpponentActivity.this, EnterNamesActivity.class);
                         i.putExtra("playerChoosing", "Player 2");
                         startActivity(i);
                         break;
@@ -81,14 +69,11 @@ public class PickOpponentFragment extends Fragment {
 
             }
         });
-
-        // Inflate the layout for this fragment
-        return view;
     }
 
     // Save data to shared preferences (only called if computer is chosen as second player)
     public void saveData(){
-        SharedPreferences sp = this.requireActivity().getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         if(player.equals("Computer")){
@@ -99,5 +84,4 @@ public class PickOpponentFragment extends Fragment {
         // commit sharedPreferences
         editor.apply();
     }
-
 }

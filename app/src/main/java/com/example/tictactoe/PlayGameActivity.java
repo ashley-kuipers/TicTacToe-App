@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -21,9 +24,9 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     TextView a1, a2, a3, b1, b2, b3, c1, c2, c3, t_title;
     char[][] currentGame;
     TextView[][] currentGameTVs;
-    int p1Wins, p2Wins, compWins;
+    int p1Wins, p2Wins, compWins, p1TotalGames, p2TotalGames, compTotalGames, p1TotalMoves, p2TotalMoves, compTotalMoves;
     boolean gameWon = false, player1Turn = true;
-    String playerName, secondPlayer;
+    String playerName, secondPlayer, p1RecentOpponent, p2RecentOpponent, compRecentOpponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,10 +140,11 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             // add player X's turn to board
             currentGameTVs[row][column].setText(R.string.x);
             currentGame[row][column] = 'X';
+            p1TotalMoves++;
 
             // check win conditions
             if(checkPlayer1Win()){
-                openDialog(playerName);
+                openDialog(playerName + " wins!");
                 // add win to the persons name
                 p1Wins++;
                 saveData();
@@ -150,11 +154,12 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             if(secondPlayer.equals("Computer") && !checkPlayer1Win()){
                 // get computer move and add it to board
                 getCompMove();
+                compTotalMoves++;
                 output = "Tap to play\nyour turn";
 
                 // check if the computer won (and prevent computer AND player from winning at the same time)
                 if(!checkPlayer1Win() && checkPlayer2Win()){
-                    openDialog(secondPlayer);
+                    openDialog(secondPlayer + " wins!");
                     compWins++;
                     saveData();
                 }
@@ -169,13 +174,19 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             // Add second player's move to board
             currentGameTVs[row][column].setText(R.string.o);
             currentGame[row][column] = 'O';
+            p2TotalMoves++;
             output = playerName + "'s\nturn";
             // check if player 2 wins
             if(checkPlayer2Win()){
-                openDialog(secondPlayer);
+                openDialog(secondPlayer + " wins!");
                 p2Wins++;
                 saveData();
             }
+        }
+
+        if(numSpacesLeft() == 0){
+            openDialog("It's a draw!");
+            saveData();
         }
 
         // if the game hasn't been won, switch the turns
@@ -249,7 +260,6 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                 // get row, col for comp move
                 int compRow = rand.nextInt(3);
                 int compCol = rand.nextInt(3);
-                Log.d("TAG", compRow + " " + compCol);
                 // check if spot isn't taken
                 if (currentGame[compRow][compCol] != 'X' && currentGame[compRow][compCol] != 'O') {
                     currentGame[compRow][compCol] = 'O';
@@ -274,6 +284,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         // Lets users know that it's player 1's turn again
         String output = playerName + "\nstarts";
         t_title.setText(output);
+        player1Turn = true;
     }
 
     // checks the number of empty spaces on the board
@@ -294,9 +305,9 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // opens an alert dialog when someone wins
-    public void openDialog(String winner){
-        WinnerDialog wd = new WinnerDialog(winner);
-        wd.show(getSupportFragmentManager(), "winner");
+    public void openDialog(String text){
+        WinnerDialog wd = new WinnerDialog(text);
+        wd.show(getSupportFragmentManager(), "dialog");
         gameWon = true;
     }
 
@@ -313,6 +324,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         outState.putString("c1", c1.getText().toString());
         outState.putString("c2", c2.getText().toString());
         outState.putString("c3", c3.getText().toString());
+
         super.onSaveInstanceState(outState);
     }
 
@@ -329,29 +341,68 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         c1.setText(savedInstanceState.getString("c1"));
         c2.setText(savedInstanceState.getString("c2"));
         c3.setText(savedInstanceState.getString("c3"));
+
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     // Retrieve data from shared preferences file
     public void getData(){
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+
         playerName = sh.getString("currentPlayerName", "Player 1");
         secondPlayer = sh.getString("secondPlayer", "Player 2");
+
         p1Wins = sh.getInt(playerName.toLowerCase(), 0);
+        p1TotalGames = sh.getInt(playerName.toLowerCase() + "_totalGames", 0);
+        p1TotalMoves = sh.getInt(playerName.toLowerCase() + "_totalMoves", 0);
+
         p2Wins = sh.getInt(secondPlayer.toLowerCase(), 0);
+        p2TotalGames = sh.getInt(playerName.toLowerCase() + "_totalGames", 0);
+        p2TotalMoves = sh.getInt(playerName.toLowerCase() + "_totalMoves", 0);
+
         compWins = sh.getInt("computer", 0);
+        compTotalGames = sh.getInt("computer_totalGames", 0);
+        compTotalMoves = sh.getInt("computer_totalMoves", 0);
 
     }
 
     // Save data to shared preferences
     public void saveData(){
+        String time = getTime();
+
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
-        // saves each players wins to shared preferences
+        if (secondPlayer.equals("Computer")){
+            compTotalGames++;
+            compRecentOpponent = playerName.toLowerCase();
+            p1RecentOpponent = "computer";
+
+            editor.putInt("computer", compWins);
+            editor.putInt("computer_totalGames", compTotalGames);
+            editor.putString("computer_recentOpponent", compRecentOpponent);
+            editor.putString("computer_time", time);
+            editor.putInt("computer_totalMoves", compTotalMoves);
+        } else {
+            p2TotalGames++;
+            p2RecentOpponent = playerName.toLowerCase();
+            p1RecentOpponent = secondPlayer.toLowerCase();
+
+            editor.putInt(secondPlayer.toLowerCase(), p2Wins);
+            editor.putInt(secondPlayer.toLowerCase() + "_totalGames", p2TotalGames);
+            editor.putString(secondPlayer.toLowerCase() + "_recentOpponent", p2RecentOpponent);
+            editor.putString(secondPlayer.toLowerCase() + "_time", time);
+            editor.putInt(secondPlayer.toLowerCase() + "_totalMoves", p2TotalMoves);
+        }
+
+        // add to each player's total games
+        p1TotalGames++;
+        // saves each players data to shared preferences
         editor.putInt(playerName.toLowerCase(), p1Wins);
-        editor.putInt(secondPlayer.toLowerCase(), p2Wins);
-        editor.putInt("computer", compWins);
+        editor.putInt(playerName.toLowerCase() + "_totalGames", p1TotalGames);
+        editor.putString(playerName.toLowerCase() + "_recentOpponent", p1RecentOpponent);
+        editor.putString(playerName.toLowerCase() + "_time", time);
+        editor.putInt(playerName.toLowerCase() + "_totalMoves", p1TotalMoves);
 
         editor.apply();
     }
@@ -363,4 +414,17 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             return null;
         }
     }
+
+    // Returns a formatted string of the current system time
+    public String getTime(){
+        // get the time when the new code was created
+        long time = System.currentTimeMillis();
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm aa dd/MM/yyyy", Locale.CANADA);
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return formatter.format(calendar.getTime());
+    }
+
 }

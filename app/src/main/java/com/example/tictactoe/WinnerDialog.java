@@ -10,16 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class WinnerDialog  extends AppCompatDialogFragment {
-    String currentWinner;
-    public WinnerDialog(String winner){
-        currentWinner = winner;
+    String text;
+    public WinnerDialog(String textInput){
+        text = textInput;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialog);
-        builder.setTitle(currentWinner + " wins!");
+        builder.setTitle(text);
         builder.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

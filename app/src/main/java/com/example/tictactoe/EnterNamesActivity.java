@@ -2,6 +2,8 @@ package com.example.tictactoe;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -27,6 +30,7 @@ public class EnterNamesActivity extends AppCompatActivity {
     String playerChoosing;
     TextView title;
     ArrayList<String> listNames = new ArrayList<String>();
+    boolean firstRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class EnterNamesActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         playerChoosing = bundle.getString("playerChoosing");
+        firstRun = bundle.getBoolean("firstRun");
 
         if (!playerChoosing.equals("Player 1")){
             title.setText(R.string.enterNameTitle2);
@@ -55,6 +60,10 @@ public class EnterNamesActivity extends AppCompatActivity {
                     // open game activity
                     Intent intent = new Intent(EnterNamesActivity.this, PlayGameActivity.class);
                     startActivity(intent);
+                } else if(firstRun){
+                    // launch choose opponent fragment
+                    Intent inten = new Intent(EnterNamesActivity.this, PIckOpponentActivity.class);
+                    startActivity(inten);
                 }
             }
         });
@@ -65,7 +74,6 @@ public class EnterNamesActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
-
         // get name from editText
         String enteredName = et_playerName.getText().toString();
 
@@ -75,19 +83,33 @@ public class EnterNamesActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         listNames = g.fromJson(j, type);
 
+        // if no listNames has been created, create one
         if(listNames == null){
             listNames = new ArrayList<String>();
             listNames.add("computer");
+
+            // create blank log value for computer
+            editor.putInt("computer", 0);
+            editor.putInt("computer_totalGames", 0);
+            editor.putString("computer_recentOpponent", "name");
+            editor.putString("computer_time", "N/A");
+            editor.putInt("computer_totalMoves", 0);
         }
 
         // check if there is a log value for the entered name already, if not, create a blank one
         int storedName = sp.getInt(enteredName.toLowerCase(), 10000000);
         if(storedName == 10000000){
-            // add a log value for their name
-            editor.putInt(enteredName.toLowerCase(), 0);
-            // add the name to the list of names array
+            String lowerCaseName = enteredName.toLowerCase();
+
+            // create blank log values
+            editor.putInt(lowerCaseName, 0);
+            editor.putInt(lowerCaseName + "_totalGames", 0);
+            editor.putString(lowerCaseName + "_recentOpponent", "name");
+            editor.putString(lowerCaseName + "_time", "N/A");
+            editor.putInt(lowerCaseName + "_totalMoves", 0);
+
+            // add the name to the list of player names
             listNames.add(enteredName.toLowerCase());
-            Log.d("TAG", "Added to Arraylist from enterNames: " + enteredName);
         }
 
         // save names of current players for PlayGameActivity
@@ -97,7 +119,7 @@ public class EnterNamesActivity extends AppCompatActivity {
             editor.putString("secondPlayer", enteredName);
         }
 
-        // convert array list to string and save
+        // save list of player names
         Gson gson = new Gson();
         String json = gson.toJson(listNames);
         editor.putString("listNames", json);

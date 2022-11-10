@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,13 +25,12 @@ public class MainActivity extends AppCompatActivity {
     String[] homeMenu;
     LinearLayout ll_logo;
     TextView tv_home;
+    int test;
 
     // Feature 1: two player mode - DONE
     // Feature 2: Welcome's user/displays player 2s name when it is their turn - DONE
-    // Feature 3: settings? could have dark mode? | or in depth stats page? (when they click their name in the leaderboard, show more in depth info | add function to reset leaderboard
+    // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) | function to reset leaderboard - DONE
     // TODO: move gameplay into async task
-    // TODO: sort leaderboard
-    // TODO: some feedback on game buttons
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // hide default action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
+
+        getData();
 
         // get initial vars
         Resources res = getResources();
@@ -62,18 +66,20 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 1:
-                        // launch choose opponent fragment
-                        FrameLayout fl = findViewById(R.id.frame_pickOpp);
-                        FragmentManager fr = getSupportFragmentManager();
-                        FragmentTransaction ft = fr.beginTransaction();
-                        PickOpponentFragment opponents = new PickOpponentFragment();
-                        ft.replace(R.id.frame_pickOpp, opponents);
-                        ft.commit();
+                        // if shared preferences does not exist, open enter name activity, else open Choose Opponent fragment
+                        if(test == 999999999){
+                            // launch enter name activity
+                            Intent inte = new Intent(MainActivity.this, EnterNamesActivity.class);
+                            // tells the activity which name is being chosen
+                            inte.putExtra("playerChoosing", "Player 1");
+                            inte.putExtra("firstRun", true);
+                            startActivity(inte);
+                        } else {
+                            // launch choose opponent activity
+                            Intent inten = new Intent(MainActivity.this, PIckOpponentActivity.class);
+                            startActivity(inten);
+                        }
 
-                        // move other items off the screen so fragment is full screen
-                        listview.setVisibility(View.GONE);
-                        ll_logo.setVisibility(View.GONE);
-                        tv_home.setVisibility(View.GONE);
                         break;
 
                     case 2:
@@ -90,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    // check for a computer log (basically to see if shared preferences exists)
+    public void getData(){
+        SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        test = sh.getInt("computer", 999999999);
+        Log.d("TAG", "test value " + test);
     }
 
 }

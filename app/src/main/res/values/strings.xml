@@ -7,9 +7,11 @@
     <string name="o">O</string>
     <string name="space"> </string>
     <string name="leaderboardTitle">Leaderboard</string>
+    <string name="leaderboardSubTitle">- Select a name for more statistics -</string>
     <string name="pickOpponentTitle">Who are you playing against?</string>
     <string name="enterNameTitle2">Enter Player 2\'s Name</string>
     <string name="enterNameSubTitle">* Name is used for leaderboard\n(not case sensitive)</string>
+    <string name="statsTitle">Statistics for</string>
 
     <string-array name="homeMenu">
         <item>Enter Name</item>
