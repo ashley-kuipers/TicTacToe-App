@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -127,83 +128,86 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private class GameAlgorithm extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
+    // Adds a corresponding move to the board (done through GameAlgorithm async task)
+    public void addTurn(int row, int column){
+        new GameAlgorithm().execute(row, column);
     }
 
-    // Adds a corresponding move to the board
-    public void addTurn(int row, int column){
-        String output;
+    private class GameAlgorithm extends AsyncTask<Integer, Void, Void>{
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            String output;
 
-        // if player X's turn (or playing against the computer), add a move
-        if(player1Turn || secondPlayer.equals("Computer")){
-            // add player X's turn to board
-            currentGameTVs[row][column].setText(R.string.x);
-            currentGame[row][column] = 'X';
-            p1TotalMoves++;
+            int row = integers[0];
+            int column = integers[1];
 
-            // check win conditions
-            if(checkPlayer1Win()){
-                openDialog(playerName + " wins!");
-                // add win to the player 1's data
-                p1Wins++;
-                saveData();
-            }
+            // if player X's turn (or playing against the computer), add a move
+            if(player1Turn || secondPlayer.equals("Computer")){
+                // add player X's turn to board
+                currentGameTVs[row][column].setText(R.string.x);
+                currentGame[row][column] = 'X';
+                p1TotalMoves++;
 
-            // if playing against the computer (and user hasn't won already), get the computers move
-            if(secondPlayer.equals("Computer") && !checkPlayer1Win()){
-                // get computer move and add it to board
-                getCompMove();
-                compTotalMoves++;
-                output = "Tap to play\nyour turn";
-
-                // check if the computer won (and prevent computer AND player from winning at the same time)
-                if(!checkPlayer1Win() && checkPlayer2Win()){
-                    openDialog(secondPlayer + " wins!");
-                    compWins++;
+                // check win conditions
+                if(checkPlayer1Win()){
+                    openDialog(playerName + " wins!");
+                    // add win to the player 1's data
+                    p1Wins++;
                     saveData();
                 }
 
-            // else switch to player 2's turn
+                // if playing against the computer (and user hasn't won already), get the computers move
+                if(secondPlayer.equals("Computer") && !checkPlayer1Win()){
+                    // get computer move and add it to board
+                    getCompMove();
+                    compTotalMoves++;
+                    output = "Tap to play\nyour turn";
+
+                    // check if the computer won (and prevent computer AND player from winning at the same time)
+                    if(!checkPlayer1Win() && checkPlayer2Win()){
+                        openDialog(secondPlayer + " wins!");
+                        compWins++;
+                        saveData();
+                    }
+
+                    // else switch to player 2's turn
+                } else {
+                    output = secondPlayer + "'s\nturn";
+                }
+
+                // else get second player's move
             } else {
-                output = secondPlayer + "'s\nturn";
+                // Add second player's move to board
+                currentGameTVs[row][column].setText(R.string.o);
+                currentGame[row][column] = 'O';
+                p2TotalMoves++;
+                output = playerName + "'s\nturn";
+
+                // check if player 2 wins
+                if(checkPlayer2Win()){
+                    openDialog(secondPlayer + " wins!");
+                    p2Wins++;
+                    saveData();
+                }
             }
 
-        // else get second player's move
-        } else {
-            // Add second player's move to board
-            currentGameTVs[row][column].setText(R.string.o);
-            currentGame[row][column] = 'O';
-            p2TotalMoves++;
-            output = playerName + "'s\nturn";
-
-            // check if player 2 wins
-            if(checkPlayer2Win()){
-                openDialog(secondPlayer + " wins!");
-                p2Wins++;
+            // check if the game is a draw
+            if(numSpacesLeft() == 0){
+                openDialog("It's a draw!");
                 saveData();
             }
+
+            // if the game hasn't been won, switch the turns
+            if(!gameWon){
+                player1Turn = !player1Turn;
+            } else {
+                gameWon = false;
+            }
+
+            t_title.setText(output);
+
+            return null;
         }
-
-        // check if the game is a draw
-        if(numSpacesLeft() == 0){
-            openDialog("It's a draw!");
-            saveData();
-        }
-
-        // if the game hasn't been won, switch the turns
-        if(!gameWon){
-            player1Turn = !player1Turn;
-        } else {
-            gameWon = false;
-        }
-
-        t_title.setText(output);
-
     }
 
     // Check if player X has a win

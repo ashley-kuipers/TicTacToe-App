@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     // Feature 1: two player mode - DONE
     // Feature 2: Welcome's user/displays player 2s name when it is their turn - DONE
     // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) | function to reset leaderboard - DONE
-    // TODO: move gameplay into async task
     // TODO: landscape versions of activities
 
     @Override
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
     public void getData(){
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         test = sh.getInt("computer", 999999999);
-        Log.d("TAG", "test value " + test);
     }
 
 }

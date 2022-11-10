@@ -37,7 +37,6 @@ public class PIckOpponentActivity extends AppCompatActivity {
 
         // add on click listener to the listview
         listview.setOnItemClickListener((parent, view, position, id) -> {
-            Log.d("TAG", "clicked " + position);
             switch (position){
                 case 0:
                     // Computer is chosen as player 2
