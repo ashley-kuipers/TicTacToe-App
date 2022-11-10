@@ -130,12 +130,14 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     // Adds a corresponding move to the board (done through GameAlgorithm async task)
     public void addTurn(int row, int column){
         new GameAlgorithm().execute(row, column);
+
     }
 
+    // Async task that performs the adding turn tasks
     private class GameAlgorithm extends AsyncTask<Integer, Void, Void>{
+        String output1;
         @Override
         protected Void doInBackground(Integer... integers) {
-            String output;
 
             int row = integers[0];
             int column = integers[1];
@@ -160,7 +162,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                     // get computer move and add it to board
                     getCompMove();
                     compTotalMoves++;
-                    output = "Tap to play\nyour turn";
+                    output1 = "Tap to play\nyour turn";
 
                     // check if the computer won (and prevent computer AND player from winning at the same time)
                     if(!checkPlayer1Win() && checkPlayer2Win()){
@@ -171,7 +173,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
 
                     // else switch to player 2's turn
                 } else {
-                    output = secondPlayer + "'s\nturn";
+                    output1 = secondPlayer + "'s\nturn";
                 }
 
                 // else get second player's move
@@ -180,7 +182,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                 currentGameTVs[row][column].setText(R.string.o);
                 currentGame[row][column] = 'O';
                 p2TotalMoves++;
-                output = playerName + "'s\nturn";
+                output1 = playerName + "'s\nturn";
 
                 // check if player 2 wins
                 if(checkPlayer2Win()){
@@ -203,9 +205,13 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
                 gameWon = false;
             }
 
-            t_title.setText(output);
-
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            t_title.setText(output1);
         }
     }
 
@@ -315,7 +321,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
 
     // opens an alert dialog when someone wins
     public void openDialog(String text){
-        WinnerDialog wd = new WinnerDialog(text);
+        PopUp wd = new PopUp(text);
         wd.show(getSupportFragmentManager(), "dialog");
         gameWon = true;
     }

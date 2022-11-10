@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     // Feature 1: two player mode - DONE
     // Feature 2: Welcome's user/displays player 2s name when it is their turn - DONE
     // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) | function to reset leaderboard - DONE
-    // TODO: landscape versions of activities
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

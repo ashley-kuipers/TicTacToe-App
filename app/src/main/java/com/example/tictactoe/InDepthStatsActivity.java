@@ -40,15 +40,16 @@ public class InDepthStatsActivity extends AppCompatActivity {
 
         getData();
 
+        // change title to include players name
         String out = "Statistics for \n" + player.toUpperCase();
         title.setText(out);
 
+        // add stats to arraylist
         statsAL.add(getFormattedString("Games Played", String.valueOf(totalGames)));
         statsAL.add(getFormattedString("Games Won", String.valueOf(wins)));
         statsAL.add(getFormattedString("Win Rate", percentageFormatted + "%"));
         statsAL.add(getFormattedString("Total # Moves", String.valueOf(totalMoves)));
         statsAL.add(getFormattedString("Average # Moves", averageMovesFormatted));
-
         statsAL.add("Last played " + lastOpponent.toUpperCase() + " at\n" + time.substring(0,10) + " on " + time.substring(11));
 
         // Creating listview adapter (connects the listview to the string array)
@@ -64,12 +65,14 @@ public class InDepthStatsActivity extends AppCompatActivity {
     public void getData(){
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
+        // get data from shared preferences
         wins = sh.getInt(player, 0);
         totalGames = sh.getInt(player + "_totalGames", 1);
         time = sh.getString(player + "_time", "N/A");
         lastOpponent = sh.getString(player + "_recentOpponent", "none");
         totalMoves = sh.getInt(player + "_totalMoves", 0);
 
+        // perform some calculations with the data for other stats
         percentage = (((double) wins)/totalGames) * 100;
         averageMoves = (((double)totalMoves)/totalGames);
         DecimalFormat fmt = new DecimalFormat("###.#");
@@ -78,6 +81,7 @@ public class InDepthStatsActivity extends AppCompatActivity {
 
     }
 
+    // formats the string that will be put in the list (changes the number of . that go in the string based on number of digits of the stats)
     public String getFormattedString(String title, String variable){
         int digitsFirst = title.length();
         int digitsAfter = variable.length();

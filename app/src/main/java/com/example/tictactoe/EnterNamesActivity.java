@@ -35,17 +35,22 @@ public class EnterNamesActivity extends AppCompatActivity {
         et_playerName = findViewById(R.id.et_playerName);
         title = findViewById(R.id.t_enterNames);
 
+        // get data from intent
         Bundle bundle = getIntent().getExtras();
+        // figure out which player is the name being chosen for
         playerChoosing = bundle.getString("playerChoosing");
+        // figure out if this is the first run of the app
         firstRun = bundle.getBoolean("firstRun");
 
-        if (!playerChoosing.equals("Player 1")){
+        // Change title if choosing name for player 2
+        if (playerChoosing.equals("Player 2")){
             title.setText(R.string.enterNameTitle2);
         }
 
+        // choose what happens when done button is pressed
         b_done.setOnClickListener(view -> {
             saveData();
-            finish();
+
             if(playerChoosing.equals("Player 2")){
                 // open game activity
                 Intent intent = new Intent(EnterNamesActivity.this, PlayGameActivity.class);
@@ -58,7 +63,7 @@ public class EnterNamesActivity extends AppCompatActivity {
         });
     }
 
-    // Save current Data when app is closed
+    // Save current Data
     public void saveData(){
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -85,7 +90,7 @@ public class EnterNamesActivity extends AppCompatActivity {
             editor.putInt("computer_totalMoves", 0);
         }
 
-        // check if there is a log value for the entered name already, if not, create a blank one
+        // check for name in the current list of names, if not, create a blank log value for that name and add them to the list
         int storedName = sp.getInt(enteredName.toLowerCase(), 10000000);
         if(storedName == 10000000){
             String lowerCaseName = enteredName.toLowerCase();
@@ -108,7 +113,7 @@ public class EnterNamesActivity extends AppCompatActivity {
             editor.putString("secondPlayer", enteredName);
         }
 
-        // save list of player names
+        // convert list to json and save
         Gson gson = new Gson();
         String json = gson.toJson(listNames);
         editor.putString("listNames", json);

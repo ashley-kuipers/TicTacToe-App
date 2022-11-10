@@ -4,189 +4,205 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
     tools:context=".PlayGameActivity">
 
-    <TextView
-        android:id="@+id/t_title"
-        style="@style/h1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:text="@string/gameTitle"
-        android:textSize="34sp" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TableLayout
-        android:id="@+id/layout_gameBoard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/lighter_background"
-        android:padding="16dp">
+        <TextView
+            android:id="@+id/t_title"
+            style="@style/h1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/gameTitle"
+            android:textSize="24sp" />
 
-        <TableRow
-            android:id="@+id/row_A"
+        <Button
+            android:id="@+id/b_quit"
+            style="@style/primaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:text="@string/b_finish" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:id="@+id/layout_gameBoard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="4dp"
-            android:background="@color/lighterBlue"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/lighter_background"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/a1"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+            <TableRow
+                android:id="@+id/row_A"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:background="@color/lighterBlue"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/a2"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+                <TextView
+                    android:id="@+id/a1"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-            <TextView
-                android:id="@+id/a3"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusableInTouchMode="true"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/a2"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-        <TableRow
-            android:id="@+id/row_B"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:background="@color/lighterBlue"
-            android:gravity="center">
+                <TextView
+                    android:id="@+id/a3"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/b1"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+            <TableRow
+                android:id="@+id/row_B"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/lighterBlue"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/b2"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+                <TextView
+                    android:id="@+id/b1"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-            <TextView
-                android:id="@+id/b3"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+                <TextView
+                    android:id="@+id/b2"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-        </TableRow>
+                <TextView
+                    android:id="@+id/b3"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-        <TableRow
-            android:id="@+id/row_C"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:background="@color/lighterBlue"
-            android:gravity="center">
+            </TableRow>
 
-            <TextView
-                android:id="@+id/c1"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+            <TableRow
+                android:id="@+id/row_C"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:background="@color/lighterBlue"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/c2"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
+                <TextView
+                    android:id="@+id/c1"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-            <TextView
-                android:id="@+id/c3"
-                style="@style/tv_gameBoard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="4"
-                android:background="@drawable/rounded_corners"
-                android:clickable="true"
-                android:focusable="true"
-                android:soundEffectsEnabled="true"
-                android:text="@string/space" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/c2"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
 
-    </TableLayout>
+                <TextView
+                    android:id="@+id/c3"
+                    style="@style/tv_gameBoard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/rounded_corners"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:soundEffectsEnabled="true"
+                    android:text="@string/space" />
+            </TableRow>
 
-    <Button
-        android:id="@+id/b_quit"
-        style="@style/primaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:text="@string/b_finish" />
+        </TableLayout>
+    </LinearLayout>
+
 </LinearLayout>

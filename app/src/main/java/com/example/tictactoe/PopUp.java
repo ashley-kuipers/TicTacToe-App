@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class WinnerDialog  extends AppCompatDialogFragment {
+public class PopUp extends AppCompatDialogFragment {
     String text;
-    public WinnerDialog(String textInput){
+    public PopUp(String textInput){
         text = textInput;
     }
 
