@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -73,13 +72,10 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         currentGameTVs = new TextView[][]{{a1, a2, a3}, {b1, b2, b3}, {c1, c2, c3}};
 
         // Adds function to the quit button (quits game and opens main activity)
-        b_quit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent i = new Intent(PlayGameActivity.this, MainActivity.class);
-                startActivity(i);
-            }
+        b_quit.setOnClickListener(view -> {
+            finish();
+            Intent i = new Intent(PlayGameActivity.this, MainActivity.class);
+            startActivity(i);
         });
 
     }
@@ -131,6 +127,14 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    private class GameAlgorithm extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+    }
+
     // Adds a corresponding move to the board
     public void addTurn(int row, int column){
         String output;
@@ -145,7 +149,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             // check win conditions
             if(checkPlayer1Win()){
                 openDialog(playerName + " wins!");
-                // add win to the persons name
+                // add win to the player 1's data
                 p1Wins++;
                 saveData();
             }
@@ -176,6 +180,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             currentGame[row][column] = 'O';
             p2TotalMoves++;
             output = playerName + "'s\nturn";
+
             // check if player 2 wins
             if(checkPlayer2Win()){
                 openDialog(secondPlayer + " wins!");
@@ -184,6 +189,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
+        // check if the game is a draw
         if(numSpacesLeft() == 0){
             openDialog("It's a draw!");
             saveData();
@@ -204,7 +210,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     public boolean checkPlayer1Win(){
         boolean userWon = false;
 
-        // check horizontal wins
+        // check for horizontal wins
         if ((currentGame[0][0] == currentGame[0][1] && currentGame[0][1] == currentGame[0][2] && currentGame[0][2] == 'X') ||
                 (currentGame[1][0] == currentGame[1][1] && currentGame[1][1] == currentGame[1][2] && currentGame[1][2] == 'X') ||
                 (currentGame[2][0] == currentGame[2][1] && currentGame[2][1] == currentGame[2][2] && currentGame[2][2] == 'X')){
@@ -227,7 +233,7 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
     public boolean checkPlayer2Win(){
         boolean userWon = false;
 
-        // check horizontal wins
+        // check for horizontal wins
         if ((currentGame[0][0] == currentGame[0][1] && currentGame[0][1] == currentGame[0][2] && currentGame[0][2] == 'O') ||
                 (currentGame[1][0] == currentGame[1][1] && currentGame[1][1] == currentGame[1][2] && currentGame[1][2] == 'O') ||
                 (currentGame[2][0] == currentGame[2][1] && currentGame[2][1] == currentGame[2][2] && currentGame[2][2] == 'O')){
@@ -324,55 +330,74 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         outState.putString("c1", c1.getText().toString());
         outState.putString("c2", c2.getText().toString());
         outState.putString("c3", c3.getText().toString());
+        outState.putCharArray("row1", currentGame[0]);
+        outState.putCharArray("row2", currentGame[1]);
+        outState.putCharArray("row3", currentGame[2]);
+
+        // save other values
+        outState.putString("title", t_title.getText().toString());
+        outState.putBoolean("gameWon", gameWon);
+        outState.putBoolean("player1Turn", player1Turn);
 
         super.onSaveInstanceState(outState);
     }
 
     // when phone is done turning, this function is called to restore any of that data you saved
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle saved) {
         // get values from saved state
-        a1.setText(savedInstanceState.getString("a1"));
-        a2.setText(savedInstanceState.getString("a2"));
-        a3.setText(savedInstanceState.getString("a3"));
-        b1.setText(savedInstanceState.getString("b1"));
-        b2.setText(savedInstanceState.getString("b2"));
-        b3.setText(savedInstanceState.getString("b3"));
-        c1.setText(savedInstanceState.getString("c1"));
-        c2.setText(savedInstanceState.getString("c2"));
-        c3.setText(savedInstanceState.getString("c3"));
+        a1.setText(saved.getString("a1"));
+        a2.setText(saved.getString("a2"));
+        a3.setText(saved.getString("a3"));
+        b1.setText(saved.getString("b1"));
+        b2.setText(saved.getString("b2"));
+        b3.setText(saved.getString("b3"));
+        c1.setText(saved.getString("c1"));
+        c2.setText(saved.getString("c2"));
+        c3.setText(saved.getString("c3"));
 
-        super.onRestoreInstanceState(savedInstanceState);
+        t_title.setText(saved.getString("title"));
+        gameWon = saved.getBoolean("gameWon");
+        player1Turn = saved.getBoolean("player1Turn");
+
+        currentGame = new char[][]{saved.getCharArray("row1"), saved.getCharArray("row2"), saved.getCharArray("row3")};
+
+        super.onRestoreInstanceState(saved);
     }
 
     // Retrieve data from shared preferences file
     public void getData(){
         SharedPreferences sh = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
+        // Get current player names
         playerName = sh.getString("currentPlayerName", "Player 1");
         secondPlayer = sh.getString("secondPlayer", "Player 2");
 
+        // get data for player 1
         p1Wins = sh.getInt(playerName.toLowerCase(), 0);
         p1TotalGames = sh.getInt(playerName.toLowerCase() + "_totalGames", 0);
         p1TotalMoves = sh.getInt(playerName.toLowerCase() + "_totalMoves", 0);
 
+        // get data for player 2
         p2Wins = sh.getInt(secondPlayer.toLowerCase(), 0);
         p2TotalGames = sh.getInt(playerName.toLowerCase() + "_totalGames", 0);
         p2TotalMoves = sh.getInt(playerName.toLowerCase() + "_totalMoves", 0);
 
+        // get data for computer
         compWins = sh.getInt("computer", 0);
         compTotalGames = sh.getInt("computer_totalGames", 0);
         compTotalMoves = sh.getInt("computer_totalMoves", 0);
 
     }
 
-    // Save data to shared preferences
+    // Save data to shared preferences and update player's stats
     public void saveData(){
         String time = getTime();
 
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
+        // save game data depending on who was being played (computer or second player)
         if (secondPlayer.equals("Computer")){
             compTotalGames++;
             compRecentOpponent = playerName.toLowerCase();
@@ -395,9 +420,10 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
             editor.putInt(secondPlayer.toLowerCase() + "_totalMoves", p2TotalMoves);
         }
 
-        // add to each player's total games
+        // add to player 1's total games
         p1TotalGames++;
-        // saves each players data to shared preferences
+
+        // saves player 1's data to shared preferences
         editor.putInt(playerName.toLowerCase(), p1Wins);
         editor.putInt(playerName.toLowerCase() + "_totalGames", p1TotalGames);
         editor.putString(playerName.toLowerCase() + "_recentOpponent", p1RecentOpponent);
@@ -407,13 +433,6 @@ public class PlayGameActivity extends AppCompatActivity implements View.OnClickL
         editor.apply();
     }
 
-    private class GameAlgorithm extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
-    }
 
     // Returns a formatted string of the current system time
     public String getTime(){

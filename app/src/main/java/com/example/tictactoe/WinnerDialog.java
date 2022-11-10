@@ -2,7 +2,6 @@ package com.example.tictactoe;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,13 +19,10 @@ public class WinnerDialog  extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.dialog);
         builder.setTitle(text);
-        builder.setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                PlayGameActivity pga = (PlayGameActivity) getActivity();
-                if (pga != null) {
-                    pga.resetBoard();
-                }
+        builder.setPositiveButton("OKAY", (dialogInterface, i) -> {
+            PlayGameActivity pga = (PlayGameActivity) getActivity();
+            if (pga != null) {
+                pga.resetBoard();
             }
         });
 

@@ -5,25 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Objects;
 
 public class InDepthStatsActivity extends AppCompatActivity {
     ListView stats;
     Button b_back2;
     TextView title;
-    ArrayList<String> statsAL = new ArrayList<String>();
+    ArrayList<String> statsAL = new ArrayList<>();
     String player, lastOpponent, percentageFormatted, time, averageMovesFormatted;
     int wins, totalGames, totalMoves, MAX_DIGITS=26;
     double percentage, averageMoves;
@@ -37,7 +32,7 @@ public class InDepthStatsActivity extends AppCompatActivity {
 
         stats = findViewById(R.id.lv_stats);
         b_back2 = findViewById(R.id.b_back2);
-        title = findViewById(R.id.title_indepth);
+        title = findViewById(R.id.title_inDepth);
 
         // get player name from intent
         Bundle bundle = getIntent().getExtras();
@@ -54,19 +49,14 @@ public class InDepthStatsActivity extends AppCompatActivity {
         statsAL.add(getFormattedString("Total # Moves", String.valueOf(totalMoves)));
         statsAL.add(getFormattedString("Average # Moves", averageMovesFormatted));
 
-        statsAL.add("Last played " + lastOpponent.toUpperCase() + " at\n" + time.substring(0,10) + " on " + time.substring(11, time.length()));
+        statsAL.add("Last played " + lastOpponent.toUpperCase() + " at\n" + time.substring(0,10) + " on " + time.substring(11));
 
         // Creating listview adapter (connects the listview to the string array)
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, statsAL);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, statsAL);
         stats.setAdapter(adapter);
 
         // add on click listener to back button (closes activity when done looking at scores)
-        b_back2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        b_back2.setOnClickListener(view -> finish());
 
     }
 

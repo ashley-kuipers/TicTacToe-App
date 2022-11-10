@@ -2,18 +2,11 @@ package com.example.tictactoe;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,7 +14,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Objects;
 
 public class EnterNamesActivity extends AppCompatActivity {
@@ -29,7 +21,7 @@ public class EnterNamesActivity extends AppCompatActivity {
     EditText et_playerName;
     String playerChoosing;
     TextView title;
-    ArrayList<String> listNames = new ArrayList<String>();
+    ArrayList<String> listNames = new ArrayList<>();
     boolean firstRun;
 
     @Override
@@ -51,20 +43,17 @@ public class EnterNamesActivity extends AppCompatActivity {
             title.setText(R.string.enterNameTitle2);
         }
 
-        b_done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData();
-                finish();
-                if(playerChoosing.equals("Player 2")){
-                    // open game activity
-                    Intent intent = new Intent(EnterNamesActivity.this, PlayGameActivity.class);
-                    startActivity(intent);
-                } else if(firstRun){
-                    // launch choose opponent fragment
-                    Intent inten = new Intent(EnterNamesActivity.this, PIckOpponentActivity.class);
-                    startActivity(inten);
-                }
+        b_done.setOnClickListener(view -> {
+            saveData();
+            finish();
+            if(playerChoosing.equals("Player 2")){
+                // open game activity
+                Intent intent = new Intent(EnterNamesActivity.this, PlayGameActivity.class);
+                startActivity(intent);
+            } else if(firstRun){
+                // launch choose opponent fragment
+                Intent intent1 = new Intent(EnterNamesActivity.this, PIckOpponentActivity.class);
+                startActivity(intent1);
             }
         });
     }
@@ -85,7 +74,7 @@ public class EnterNamesActivity extends AppCompatActivity {
 
         // if no listNames has been created, create one
         if(listNames == null){
-            listNames = new ArrayList<String>();
+            listNames = new ArrayList<>();
             listNames.add("computer");
 
             // create blank log value for computer

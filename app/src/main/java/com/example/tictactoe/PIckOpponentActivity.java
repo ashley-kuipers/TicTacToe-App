@@ -32,42 +32,39 @@ public class PIckOpponentActivity extends AppCompatActivity {
 
         // Creating listview adapter (connects the listview to the string array)
         listview = findViewById(R.id.lv_opponent);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, opponentMenu);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, opponentMenu);
         listview.setAdapter(adapter);
 
         // add on click listener to the listview
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                Log.d("TAG", "clicked " + position);
-                switch (position){
-                    case 0:
-                        // Computer is chosen as player 2
-                        player = "Computer";
-                        saveData();
+        listview.setOnItemClickListener((parent, view, position, id) -> {
+            Log.d("TAG", "clicked " + position);
+            switch (position){
+                case 0:
+                    // Computer is chosen as player 2
+                    player = "Computer";
+                    saveData();
 
-                        // open game activity
-                        Intent intent = new Intent(PIckOpponentActivity.this, PlayGameActivity.class);
-                        startActivity(intent);
-                        break;
+                    // open game activity
+                    Intent intent = new Intent(PIckOpponentActivity.this, PlayGameActivity.class);
+                    startActivity(intent);
+                    break;
 
-                    case 1:
-                        // Another Player is chosen as Player 2
-                        player = "Player 2";
+                case 1:
+                    // Another Player is chosen as Player 2
+                    player = "Player 2";
 
-                        // open choose name activity so Player 2's name can be entered
-                        Intent i = new Intent(PIckOpponentActivity.this, EnterNamesActivity.class);
-                        i.putExtra("playerChoosing", "Player 2");
-                        startActivity(i);
-                        break;
+                    // open choose name activity so Player 2's name can be entered
+                    Intent i = new Intent(PIckOpponentActivity.this, EnterNamesActivity.class);
+                    i.putExtra("playerChoosing", "Player 2");
+                    startActivity(i);
+                    break;
 
-                    default:
-                        // error
-                        break;
-
-                }
+                default:
+                    // error
+                    break;
 
             }
+
         });
     }
 

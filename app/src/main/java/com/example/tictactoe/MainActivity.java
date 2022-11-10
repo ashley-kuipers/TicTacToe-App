@@ -1,8 +1,6 @@
 package com.example.tictactoe;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     // Feature 2: Welcome's user/displays player 2s name when it is their turn - DONE
     // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) | function to reset leaderboard - DONE
     // TODO: move gameplay into async task
+    // TODO: landscape versions of activities
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,52 +45,48 @@ public class MainActivity extends AppCompatActivity {
 
         // Creating listview adapter
         listview = findViewById(R.id.lv_home);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, homeMenu);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_listview, android.R.id.text1, homeMenu);
         listview.setAdapter(adapter);
 
         // Determine which option the user selected, and open appropriate activity/fragment
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                switch (position){
-                    case 0:
+        listview.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position){
+                case 0:
+                    // launch enter name activity
+                    Intent intent = new Intent(MainActivity.this, EnterNamesActivity.class);
+                    // tells the activity which name is being chosen
+                    intent.putExtra("playerChoosing", "Player 1");
+                    startActivity(intent);
+                    break;
+
+                case 1:
+                    // if shared preferences does not exist, open enter name activity, else open Choose Opponent fragment
+                    if(test == 999999999){
                         // launch enter name activity
-                        Intent in = new Intent(MainActivity.this, EnterNamesActivity.class);
+                        Intent intent1 = new Intent(MainActivity.this, EnterNamesActivity.class);
                         // tells the activity which name is being chosen
-                        in.putExtra("playerChoosing", "Player 1");
-                        startActivity(in);
-                        break;
+                        intent1.putExtra("playerChoosing", "Player 1");
+                        intent1.putExtra("firstRun", true);
+                        startActivity(intent1);
+                    } else {
+                        // launch choose opponent activity
+                        Intent intent2 = new Intent(MainActivity.this, PIckOpponentActivity.class);
+                        startActivity(intent2);
+                    }
+                    break;
 
-                    case 1:
-                        // if shared preferences does not exist, open enter name activity, else open Choose Opponent fragment
-                        if(test == 999999999){
-                            // launch enter name activity
-                            Intent inte = new Intent(MainActivity.this, EnterNamesActivity.class);
-                            // tells the activity which name is being chosen
-                            inte.putExtra("playerChoosing", "Player 1");
-                            inte.putExtra("firstRun", true);
-                            startActivity(inte);
-                        } else {
-                            // launch choose opponent activity
-                            Intent inten = new Intent(MainActivity.this, PIckOpponentActivity.class);
-                            startActivity(inten);
-                        }
+                case 2:
+                    // launch standings activity
+                    Intent intent3 = new Intent(MainActivity.this, ShowStandingsActivity.class);
+                    startActivity(intent3);
+                    break;
 
-                        break;
-
-                    case 2:
-                        // launch standings activity
-                        Intent intent = new Intent(MainActivity.this, ShowStandingsActivity.class);
-                        startActivity(intent);
-                        break;
-
-                    default:
-                        // error
-                        break;
-
-                }
+                default:
+                    // error
+                    break;
 
             }
+
         });
     }
 
