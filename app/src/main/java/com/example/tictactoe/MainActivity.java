@@ -21,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
     TextView tv_home;
     int test;
 
-    // Feature 1: two player mode - DONE
-    // Feature 2: Welcome's user/displays player 2s name when it is their turn - DONE
-    // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) | function to reset leaderboard - DONE
+    // Feature 1: two player mode
+    // Feature 2: Welcome's user/displays player 2s name when it is their turn
+    // Feature 3: in depth stats page (when they click their name in the leaderboard, show more in depth info) |
+    // Feature 4: (if feature 1 doesn't count) Function to reset stats
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
